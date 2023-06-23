@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-service-deployment
+  namespace: pfe-projet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: account-service
+  template:
+    metadata:
+      labels:
+        app: account-service
+    spec:
+      containers:
+      - name: account-service
+        image: soufianeyemlahi/account-service:v3
+        ports:
+        - containerPort: 8000  
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app/application.yml  # Mount path for the YAML file
+            subPath: app-config.yaml # Name of the YAML file inside the volume
+            readOnly: true
+      volumes:
+      - name: config-volume
+        configMap:
+          name: account-config
+
